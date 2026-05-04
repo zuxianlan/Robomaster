@@ -5,7 +5,7 @@
 #include "user_lib.h"
 
 // 小陀螺参数 输出单位为rad/s
-#define YAW_ROT_PID_KP  13.0f
+#define YAW_ROT_PID_KP  12.0f
 #define YAW_ROT_PID_KI  0.01f
 #define YAW_ROT_PID_KD  0.02f
 #define YAW_ROT_PID_MAX_OUT  30.0f  // 限制最大输出速度，对应达妙VMAX

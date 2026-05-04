@@ -33,21 +33,23 @@ void gimbal_follow_chassis_control(gimbal_control_t *gimbal_follow_chassis)
     if (gimbal_follow_chassis == NULL) return;
     float ch1_set = -(float)(gimbal_follow_chassis->board_measure->ch0) / 660.0f * PI;
 
-    CAN_cmd_dm_j4310_mit(ch1_set, 0, 0.0f, 2.0f, 0.2f);
+    //CAN_cmd_dm_j4310_mit(ch1_set, 0, 0.0f, 2.0f, 0.2f);
 
     //云台IMU的yaw轴,pitch轴,gyro_z,gyro_x
     fp32 yaw_angle_get = gimbal_follow_chassis->motor_measure->position- yaw_motor_offset;
     fp32 gyro_z_get = gimbal_follow_chassis->board_measure->gyro_z;
-    if (fabs(yaw_angle_get) < 0.2f) yaw_angle_get = 0.0f;
+    if (fabs(yaw_angle_get) < 0.1f) yaw_angle_get = 0.0f;
 
-    float data[5];
-    data[0] = gimbal_follow_chassis->board_measure->yaw;
-    data[1] = gyro_z_get;
-    data[2] = yaw_angle_get;
-    VOFA_Transmit_JustFloat(data, 3);
+    // float data[5];
+    // data[0] = gimbal_follow_chassis->board_measure->yaw;
+    // data[1] = gyro_z_get;
+    // data[2] = yaw_angle_get;
+    // VOFA_Transmit_JustFloat(data, 3);
+
     //位置环计算
     gimbal_follow_chassis->yaw_follow_omega_set = gimbal_PID_calc(&gimbal_follow_chassis->yaw_follow_chassis_pid, yaw_angle_get, 0.0f, gyro_z_get);
-
+    fp32 p_des = yaw_motor_offset + ch1_set;
+    CAN_cmd_dm_j4310_mit(p_des, 0, 0.0f, 2.0f, 0.2f);
 }
 
 
