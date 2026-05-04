@@ -10,7 +10,7 @@
 
 fp32 gyro[3], accel[3], real_gyro[3];
 fp32 deadzone_gyro_z = 0.0f;
-fp32 dt = 0.01f; // 任务周期 10ms
+fp32 dt = 0.002f; // 任务周期 2ms
 
 // 3个零偏估计器 (X, Y, Z轴)
 KalmanFilter_t Gyro_Bias_KF[3];
@@ -33,11 +33,11 @@ void bmi088_task(void const * argument)
         uint8_t is_acc_static = (fabs(acc_mag - 9.8f) < 1.6f) ? 1 : 0;
 
         // X轴(Pitch)静止条件：加速度正常 且 X轴陀螺仪不动
-        uint8_t is_static_x = (is_acc_static && fabs(gyro[0]) < 0.5f) ? 1 : 0;
+        uint8_t is_static_x = (is_acc_static && fabs(gyro[0]) < 0.3f) ? 1 : 0;
         // Y轴(Roll)静止条件：加速度正常 且 Y轴陀螺仪不动
-        uint8_t is_static_y = (is_acc_static && fabs(gyro[1]) < 0.5f) ? 1 : 0;
+        uint8_t is_static_y = (is_acc_static && fabs(gyro[1]) < 0.3f) ? 1 : 0;
         // Z轴(Yaw)静止条件：加速度正常 且 Z轴陀螺仪不动
-        uint8_t is_static_z = (is_acc_static && fabs(gyro[2]) < 0.5f) ? 1 : 0;
+        uint8_t is_static_z = (is_acc_static && fabs(gyro[2]) < 0.3f) ? 1 : 0;
 
         uint8_t static_flags[3] = {is_static_x, is_static_y, is_static_z};
 
